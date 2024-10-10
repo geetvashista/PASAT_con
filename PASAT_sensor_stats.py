@@ -1,5 +1,6 @@
 import numpy as np
 import os
+import pandas as pd
 from scipy.stats import f_oneway
 
 def get_data(base_path, char):
@@ -54,3 +55,23 @@ for index, val in enumerate(list(p_val)):
     if val <= 0.05:
         target.append(index)
 [print(ch_names[index]) for index in target]
+
+def pli_direction(array):
+    array = np.mean(array, axis=0)
+    hold = []
+    for index in target:
+        hold.append(array[index])
+    return np.array(hold)
+
+result_1 = pli_direction(r1)
+result_2 = pli_direction(r2)
+result_3 = pli_direction(r3)
+result_4 = pli_direction(r4)
+result_5 = pli_direction(r5)
+result_6 = pli_direction(r6)
+result_7 = pli_direction(r7)
+result_8 = pli_direction(r8)
+
+df = pd.DataFrame({'1': result_1, '2':result_2, '3':result_3, '4':result_4, '5':result_5, '6':result_6, '7':result_7, '8': result_8})
+df.to_excel('for_num8.xlsx')
+
