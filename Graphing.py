@@ -28,7 +28,7 @@ for file in Theta_files:
 regions = {
     'frontal': ['FP1', 'FP2', 'AF7', 'AF8', 'AF3', 'AF4', 'F7', 'F8', 'F5', 'F6', 'F3', 'F4', 'F1', 'F2', 'FZ', 'FPZ'],
     'central': ['FC5', 'FC6', 'FC3', 'FC4', 'FC1', 'FC2', 'FCZ', 'C5', 'C6', 'C3', 'C4', 'C1', 'C2', 'CZ'],
-    'parietal': ['CP5', 'CP6', 'CP3', 'CP4', 'CP1', 'CP2', 'CPZ', 'P7', 'P8', 'P5', 'P6', 'P3', 'P4', 'P1', 'P2', 'PZ'],
+    'parietal': [ 'P7', 'P8', 'P5', 'P6', 'P3', 'P4', 'P1', 'P2', 'PZ', 'CP5', 'CP6', 'CP3', 'CP4', 'CP1', 'CP2', 'CPZ'],
     'occipital': ['PO7', 'PO8', 'PO3', 'PO4', 'POZ', 'O1', 'O2', 'OZ', 'IZ'],
     'temporal': ['FT7', 'FT8', 'FT9', 'FT10', 'T7', 'T8', 'T9', 'T10', 'TP7', 'TP8', 'TP9', 'TP10', 'M1', 'M2']
 }
@@ -44,12 +44,17 @@ color_map = {
 # Put Electrode colours into one place
 electrode_color_map = {electrode: color for region, electrodes in regions.items() for electrode in electrodes for color in [color_map[region]]}
 
+# Defining angles for graph
+angles = [0, 45, 90, 135, 180, 225, 270, 315]
+
 # Function to plot data
 def plot_frequency_band(frequency_name, dataframes, color_map):
     for i, df in enumerate(dataframes):
         if df.empty:
             print(f"Skipping empty {frequency_name} DataFrame {i + 1}")
             continue
+
+        df.columns = angles  # Setting column values
 
         plt.figure(figsize=(10, 6))
 
@@ -60,15 +65,17 @@ def plot_frequency_band(frequency_name, dataframes, color_map):
 
         # Customize the graph
         plt.title(f"{frequency_name} - #{i + 1}")
-        plt.xlabel('Rotation')
-        plt.ylabel('PLI Value')
+        plt.xlabel('Rotation°')
+        plt.ylabel('ΔPLI')
         plt.legend(loc='upper right')
         plt.grid(True)
         plt.ylim(-0.05, .05)
         plt.tight_layout()
 
-    plt.show() # Showing all plots
+        plt.xticks(ticks=angles, labels=angles)  # Set specific x-axis ticks
 
+    plt.show()  # Showing all plots
+    
 # looping through both Alpha and Theta frequency bands
 for frequency_name, dataframes in [('Alpha', Alpha_dfs), ('Theta', Theta_dfs)]:
     plot_frequency_band(frequency_name, dataframes, color_map)
